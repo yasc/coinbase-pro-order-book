@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Communication classes and functions.
+Classes and functions for establishing and managing connections/streams with exchange API.
 """
 
 import datetime
@@ -9,13 +9,14 @@ import json as js
 import websocket as ws
 
 class Connection(object):
-	
+"""Base class for a connection object."""	
 	def __init__(self,exchange):
 		self.dateTimeStarted = datetime.datetime.now()
 		self.exchange = exchange
 		
 class webSocketConnection(Connection):
-	
+	"""Class for websocket connection.""""	
+
 	def __init__(self,exchange, product, channel):
 		Connection.__init__(self,exchange)
 		self.serverURL = getServerURL(exchange)
@@ -23,9 +24,11 @@ class webSocketConnection(Connection):
 		self.wsConnection = ws.create_connection(self.serverURL)
 		
 	def start(self):
+		"""Establishes the websocket connection."""
 		self.wsConnection.send(self.subscriptionMessage)
 		
 	def getLatestMessage(self):
+		"""Obtains the latest message from the websocket stream."""
 		return  js.loads(self.wsConnection.recv())
 		
 	def close(self):
