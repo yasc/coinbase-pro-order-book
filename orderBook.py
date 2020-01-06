@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Classes and functions used to manage market data.
+Classes and functions used to parse and manage data receives from exchange.
 """
 
 import communication as com
@@ -10,6 +10,7 @@ import os
 ORDER_BOOK_DEPTH = None
 
 class OrderBook(object):
+	"""Base class for an orderbook."""
 	def __init__(self, exchange,product):
 		self.exchange = exchange
 		self.product = product
@@ -28,12 +29,14 @@ class OrderBook(object):
 		return "".join(header)
 		
 class GDAXOrderBook(OrderBook):
-
+	"""Class for the GDAX oderbook.""""
+	
 	def __init__(self, product):
 		OrderBook.__init__(self, 'GDAX', product)	
 		self.dataStream = com.webSocketConnection(self.exchange,product,'level2')
 
 	def getSnapshot(self):
+		""""Retrieve snapshot of orderbook from the exchange."""
 		self.dataStream.start()
 		snapshotMessage = self.dataStream.getLatestMessage()
 		snapshotMessage = self.dataStream.getLatestMessage()
@@ -43,6 +46,7 @@ class GDAXOrderBook(OrderBook):
 		#self.asks = sorted([[float(asks[i][0]),float(asks[i][1])] for i in range(0,len(asks))],key = lambda x: x[0])
 	
 	def update(self):
+		""""Retrieve the latest exchange message and apply the changes contained therein to the orderbook."""
 		update = self.getUpdateMessage()
 		if update[0] == 'buy':
 			if update[2] == '0.00000000':
@@ -57,6 +61,7 @@ class GDAXOrderBook(OrderBook):
 			
 			
 	def getUpdateMessage(self):
+		"""Retrieve the latest exchange message from the exchange."""
 		updateMessage = self.dataStream.getLatestMessage()
 		while updateMessage['type'] != 'l2update':
 			print("WARNING: Non-update message received. Getting next message...")
@@ -70,14 +75,3 @@ class GDAXOrderBook(OrderBook):
 	def closeDataStream(self):
 		self.dataStream.close()
 			
-		
-GDAXOrderBook = GDAXOrderBook('BTC-USD')
-GDAXOrderBook.getSnapshot()
-i = 0
-while True:
-        GDAXOrderBook.update()
-        i += 1
-        if i % 20 == 0:
-                i = 0
-                os.system('cls')
-                print(GDAXOrderBook)
