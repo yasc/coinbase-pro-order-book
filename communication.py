@@ -9,13 +9,13 @@ import json as js
 import websocket as ws
 
 class Connection(object):
-	"""Base class for a connection object."""	
+	"""Base class for a connection object."""
 	def __init__(self,exchange):
 		self.dateTimeStarted = datetime.datetime.now()
 		self.exchange = exchange
 		
 class webSocketConnection(Connection):
-	"""Class for websocket connection.""""	
+	"""Class for websocket connection."""
 
 	def __init__(self,exchange, product, channel):
 		Connection.__init__(self,exchange)

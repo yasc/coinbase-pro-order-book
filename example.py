@@ -10,7 +10,10 @@ exchange message to prevent constant flicker of the terminal.
 
 The user can specify which currency pair the orderbook displays by changing the 'currencyPair'
 variable below.
-""""
+"""
+
+from orderBook import GDAXOrderBook
+import os
 
 currencyPair = 'BTC-USD'
 

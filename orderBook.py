@@ -29,7 +29,7 @@ class OrderBook(object):
 		return "".join(header)
 		
 class GDAXOrderBook(OrderBook):
-	"""Class for the GDAX oderbook.""""
+	"""Class for the GDAX oderbook."""
 	
 	def __init__(self, product):
 		OrderBook.__init__(self, 'GDAX', product)	
